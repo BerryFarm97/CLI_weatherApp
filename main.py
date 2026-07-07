@@ -3,7 +3,7 @@ import requests
 
 def getgeodata(city):
     geocoding_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=5&language=en&format=json"
-    response = requests.get(geocoding_url)
+    response = requests.get(geocoding_url, timeout=10)
     geo_data = response.json()
     result = geo_data.get('results')
     return result
@@ -39,7 +39,7 @@ def main():
                     latitude = selected_city.get('latitude')
 
                     forecast_url = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch"
-                    forecast_response = requests.get(forecast_url)
+                    forecast_response = requests.get(forecast_url, timeout=10)
                     forecast_data = forecast_response.json()
                     current_forecast = forecast_data['current']
                     forecast_measurements = forecast_data['current_units']

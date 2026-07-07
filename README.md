@@ -1,0 +1,1 @@
+This is a Python command-line weather application that uses the Open-Meteo Geocoding and Forecast APIs. The user can enter a city name, choose from possible location matches, and view current weather details including temperature, humidity, precipitation, and wind speed.

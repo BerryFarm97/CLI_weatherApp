@@ -21,7 +21,6 @@ def get_weather_data(latitude, longitude):
         forecast_data = forecast_response.json()
         return forecast_data
     except requests.exceptions.RequestException:
-        print("Something went wrong. Please try again later")
         return None
 
 def display_possible_matches(displayed_matches):
@@ -64,6 +63,23 @@ def ask_to_continue():
         else:
             print("Invalid selection, please try again")
 
+def get_city_choice(displayed_matches):
+    while True:
+        display_possible_matches(displayed_matches)
+
+        try:
+            choice = int(input("Which city is correct?: "))
+
+            if 1 <= choice <= len(displayed_matches):
+                return choice
+            elif choice == 6:
+                return choice
+            elif choice == 7:
+                return choice
+            else:
+                print("Invalid selection. Please try again.")
+        except ValueError:
+            print("Invalid entry. Please try again.")
 
 def main():
     getting_weather = True
@@ -85,43 +101,37 @@ def main():
         displayed_matches = possible_matches[:5]
 
         while weather_results:
-            try:
 
-                display_possible_matches(displayed_matches)
+            correct_city = get_city_choice(displayed_matches)
 
-                correct_city = int(input("Which city is correct?: "))
-                if len(displayed_matches) >= correct_city > 0:
-                    selected_city = displayed_matches[correct_city - 1]
-                    longitude = selected_city.get('longitude')
-                    latitude = selected_city.get('latitude')
+            if len(displayed_matches) >= correct_city > 0:
+                selected_city = displayed_matches[correct_city - 1]
+                longitude = selected_city.get('longitude')
+                latitude = selected_city.get('latitude')
 
-                    forecast_data = get_weather_data(latitude, longitude)
-                    if forecast_data is None:
-                        print("Weather could not be loaded. Please try again later.")
-                        break
-                    else:
-                        weather_details = extract_weather_data(forecast_data)
-                        display_weather_report(selected_city, weather_details)
-
-                    search_again = ask_to_continue()
-                    if search_again:
-                        break
-                    else:
-                        getting_weather = False
-                        weather_results = False
-                    break
-
-                elif correct_city == 6:
-                    break
-                elif correct_city == 7:
-                    getting_weather = False
+                forecast_data = get_weather_data(latitude, longitude)
+                if forecast_data is None:
+                    print("Weather could not be loaded. Please try again later.")
                     break
                 else:
-                    print("Invalid entry. Please enter a valid option.")
-                    continue
+                    weather_details = extract_weather_data(forecast_data)
+                    display_weather_report(selected_city, weather_details)
 
-            except ValueError:
-                print("Invalid option, please try again")
+                search_again = ask_to_continue()
+                if search_again:
+                    break
+                else:
+                    getting_weather = False
+                    weather_results = False
+                break
+
+            elif correct_city == 6:
+                break
+            elif correct_city == 7:
+                getting_weather = False
+                break
+
+
 
 
 
